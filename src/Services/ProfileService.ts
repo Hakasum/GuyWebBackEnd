@@ -62,7 +62,8 @@ async function deleteProfile(_id: string) {
     if (!mongoose.Types.ObjectId.isValid(_id)) {
         throw new Error('Invalid profileId');
     }
-    const result = await Profile.findOneAndDelete({ _id}).exec();
+    const profileToDelete = await Profile.findOne({ _id: _id })
+    const result = await profileToDelete.deleteOne();
     return result !== null;
   }
 export default {
