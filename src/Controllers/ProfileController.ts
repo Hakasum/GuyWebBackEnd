@@ -3,6 +3,7 @@ import Profile from "../models/Profile";
 import ProfileService from "../Services/ProfileService";
 import express from "express";
 import Request from "../models/Request";
+import TributeService from "Services/TributeService";
 
 const router = express.Router();
 
@@ -20,20 +21,17 @@ router.get("/", async (req, res) => {
 router.post("/new-tribute",async (req, res) => {
     try {
         const newTribute= new Tribute(req.body);
-        const addedTribute = await ProfileService.createProfileTribute(newTribute);
+        const addedTribute = await TributeService.createTribute(newTribute);
         res.json(addedTribute)
     } catch (err) { 
         res.status(500).json("An Error Occurred ")
     }
 })
 
-router.post("/new-request",async (req, res) => {
+router.post("/:profileId/new-request",async (req, res) => {
     try {
-        const newRequest = new Request();
-        newRequest.profileId = req.body.profileId;
-        newRequest.type = req.body.type;
-        newRequest.body = req.body.body;
-        const addedRequest = await ProfileService.createRequest(newRequest);
+        const newRequest = new Request(req.body);
+        const addedRequest = await ProfileService.createRequest(newRequest, req.params.profileId);
         res.json(addedRequest)
     } catch (err) { 
         res.status(500).json("An Error Occurred ")
