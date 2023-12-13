@@ -3,6 +3,7 @@ import mongoose, { Schema, Document } from "mongoose";
 
 interface TributeI {
   title: string;
+  description: string;
   contributorName: string;
   image: string;
   date: Date;
@@ -14,6 +15,9 @@ const TributeSchema = new Schema({
   title: {
     type: String,
     required: [true, "Missing title"],
+  },
+  description: {
+    type: String,
   },
   contributorName: {
     type: String,

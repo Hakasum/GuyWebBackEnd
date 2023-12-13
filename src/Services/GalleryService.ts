@@ -6,12 +6,6 @@ async function createGallery() {
     return newGallery._id;
 }
 
-async function deleteGallery(_id: string) {
-    //delete data from server
-    //const gallery = Gallery.findById(_id).exec;
-    Gallery.deleteOne({_id}).exec();
-}
-
 export default {
     createGallery
 }
