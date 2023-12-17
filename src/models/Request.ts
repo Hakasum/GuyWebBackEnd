@@ -12,7 +12,7 @@ export interface RequestModel extends RequestI, Document<string> {}
 const RequestSchema = new Schema({
   type: {
     type: String,
-    enum: ["Writing", "Image", "Tribute"],
+    enum: ["Writing", "Gallery", "Tribute"],
     required: true,
   },
   body: {

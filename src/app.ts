@@ -3,7 +3,9 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import { config } from "./config"
-import ProfileController from "./Controllers/ProfileController"
+import ProfileController from "./Controllers/VisitorController"
+import ProfileAdminController from "./Controllers/ProfileAdminController"
+import AdminController from "./Controllers/AdminController"
 
 const app = express();
 
@@ -15,7 +17,9 @@ app.get('/api/ping', (request, response) => {
     return response.send('hello')
 })
 
-app.use('/api/profiles', ProfileController);
+app.use('/api/visitor', ProfileController);
+app.use('/api/profile-admin', ProfileAdminController);
+app.use('/api/admin', AdminController);
 
 
 mongoose.connect(config.mongo.url, { retryWrites: true, w: "majority" })

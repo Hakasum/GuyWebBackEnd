@@ -1,10 +1,16 @@
 import mongoose from "mongoose";
 import Tribute, { TributeModel } from "../models/Tribute";
+import Profile from "models/Profile";
 
-async function createTribute(newTribute: TributeModel) {
+async function createTribute(newTribute: TributeModel, profileId: string) {
     const errors = newTribute.validateSync();
-    if (errors) throw new Error("Cannot create new tribute")
-    return newTribute.save;
+    if (errors) {
+        throw new Error("Cannot create new tribute");
+    }
+    const addedTribute = await newTribute.save();
+    const profile = await Profile.findById(profileId);
+    profile.tributes.push(new mongoose.Types.ObjectId(addedTribute._id))
+    return addedTribute;
 }
 
 async function deleteTribute(_id: string) {

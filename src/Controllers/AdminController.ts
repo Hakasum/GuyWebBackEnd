@@ -1,9 +1,6 @@
-import Tribute from "../models/Tribute";
-import Profile from "../models/Profile";
 import ProfileService from "../Services/ProfileService";
 import express from "express";
 import Request from "../models/Request";
-import TributeService from "Services/TributeService";
 
 const router = express.Router();
 
@@ -18,17 +15,20 @@ router.get("/", async (req, res) => {
     }
 })
 
-router.post("/new-tribute",async (req, res) => {
+router.get("/:profileId", async (req, res) => {
     try {
-        const newTribute= new Tribute(req.body);
-        const addedTribute = await TributeService.createTribute(newTribute);
-        res.json(addedTribute)
-    } catch (err) { 
+        const profile= await ProfileService.getFullProfile(req.params.profileId);
+        if (profile!==null) {res.json(profile)}
+        else {res.send('No Profile With Such ID')}
+    }
+    catch (err) {
         res.status(500).json("An Error Occurred ")
     }
 })
 
-router.post("/:profileId/new-request",async (req, res) => {
+
+
+router.post("/new-request/:profileId",async (req, res) => {
     try {
         const newRequest = new Request(req.body);
         const addedRequest = await ProfileService.createRequest(newRequest, req.params.profileId);
@@ -38,10 +38,9 @@ router.post("/:profileId/new-request",async (req, res) => {
     }
 })
 
-router.post("/", async (req, res) => {
+router.post("/add-profile", async (req, res) => {
     try { 
-        const newProfile = new Profile(req.body);
-        const addedProfile = await ProfileService.createProfile(newProfile);
+        const addedProfile = await ProfileService.createProfile();
         res.json(addedProfile)
     }
     catch (err) {

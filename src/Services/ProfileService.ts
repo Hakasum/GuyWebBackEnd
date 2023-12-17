@@ -3,7 +3,7 @@ import Profile, { ProfileModel } from "../models/Profile";
 import GalleryService from "./GalleryService";
 import Tribute, { TributeModel } from "../models/Tribute";
 import Writing, { WritingModel } from "../models/Writing";
-import {RequestModel} from "../models/Request";
+import Request, {RequestModel} from "../models/Request";
 
 async function getAllProfiles() {
     return await Profile.find().exec();
@@ -14,9 +14,8 @@ async function getFullProfile(id: string) {
     return await Profile.findById(id).populate("gallery").populate("writings").populate("tributes").exec();
 }
 
-async function createProfile(newProfile: ProfileModel) {
-    const errors = newProfile.validateSync();
-    if (errors) throw new Error("Try Again")
+async function createProfile() {
+    const newProfile = new Profile();
     newProfile.gallery = new mongoose.Types.ObjectId(await GalleryService.createGallery());
     console.log("Gallery", newProfile.gallery);
     return newProfile.save();
@@ -38,10 +37,33 @@ async function createRequest(requestToAdd:RequestModel, profileId: String) {
     return result !== null
 }
 
+async function approveRequest(requestIdToApprove: string, profileId: string) {
+    if (!mongoose.Types.ObjectId.isValid(requestIdToApprove) || !mongoose.Types.ObjectId.isValid(requestIdToApprove)){
+        throw new Error("Try Again")
+    }
+    const requestToAdd = await Request.findById(requestIdToApprove);
+    const profile = await Profile.findById(profileId);
+    switch(requestToAdd.type) {
+        case "Tribute":
+            const tributeToAdd = new Tribute(JSON.parse(requestToAdd.body));
+            const tributeAdded = await tributeToAdd.save();
+            profile.tributes.push(new mongoose.Types.ObjectId(tributeAdded._id));
+            break;
+        case "Writing":
+            const writingToAdd = new Writing(JSON.parse(requestToAdd.body));
+            const writingAdded = await writingToAdd.save();
+            profile.tributes.push(new mongoose.Types.ObjectId(writingAdded._id));
+            break;
+        case "Gallery":
+            break;
+    }
+}
+
 export default {
     getAllProfiles,
     getFullProfile,
     createProfile,
     deleteProfile,
-    createRequest
+    createRequest,
+    approveRequest
 }
