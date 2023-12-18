@@ -3,7 +3,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import { config } from "./config"
-import ProfileController from "./Controllers/VisitorController"
+import MainController from "./Controllers/MainController"
 import ProfileAdminController from "./Controllers/ProfileAdminController"
 import AdminController from "./Controllers/AdminController"
 
@@ -17,7 +17,7 @@ app.get('/api/ping', (request, response) => {
     return response.send('hello')
 })
 
-app.use('/api/visitor', ProfileController);
+app.use('/api', MainController);
 app.use('/api/profile-admin', ProfileAdminController);
 app.use('/api/admin', AdminController);
 

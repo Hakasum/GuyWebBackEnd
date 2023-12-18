@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import Profile, { ProfileModel } from "../models/Profile";
+import Profile from "../models/Profile";
 import GalleryService from "./GalleryService";
-import Tribute, { TributeModel } from "../models/Tribute";
-import Writing, { WritingModel } from "../models/Writing";
+import Tribute from "../models/Tribute";
+import Writing from "../models/Writing";
 import Request, {RequestModel} from "../models/Request";
 
 async function getAllProfiles() {
@@ -57,6 +57,9 @@ async function approveRequest(requestIdToApprove: string, profileId: string) {
         case "Gallery":
             break;
     }
+
+    const result = profile.requests.splice(profile.requests.indexOf(new mongoose.Types.ObjectId(requestIdToApprove)),1);
+    return result;
 }
 
 export default {
