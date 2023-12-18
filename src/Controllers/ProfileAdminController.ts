@@ -1,9 +1,9 @@
-import ProfileService from "Services/ProfileService";
-import TributeService from "Services/TributeService";
-import WritingService from "Services/WritingService";
+import ProfileService from "../Services/ProfileService"
+import TributeService from "../Services/TributeService";
+import WritingService from "../Services/WritingService";
 import express from "express";
-import Tribute from "models/Tribute";
-import Writing from "models/Writing";
+import Tribute from "../models/Tribute";
+import Writing from "../models/Writing";
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.get("/:profileId", async (req, res) => {
     catch (err) {
         res.status(500).json("An Error Occurred ")
     }
-})
+});
 
 router.post("/new-tribute/:profileId",async (req, res) => {
     try {
@@ -26,7 +26,7 @@ router.post("/new-tribute/:profileId",async (req, res) => {
     } catch (err) { 
         res.status(500).json("An Error Occurred ")
     }
-})
+});
 
 router.post("/new-writing/:profileId",async (req, res) => {
     try {
@@ -36,7 +36,7 @@ router.post("/new-writing/:profileId",async (req, res) => {
     } catch (err) { 
         res.status(500).json("An Error Occurred ")
     }
-})
+});
 
 router.post("/approve/:profileId/:requestId", async (req, res) => {
     try {
@@ -45,6 +45,6 @@ router.post("/approve/:profileId/:requestId", async (req, res) => {
     } catch(err) {
         res.status(500).json("An Error Occurred ")
     }
-})
+});
 
 export default router;

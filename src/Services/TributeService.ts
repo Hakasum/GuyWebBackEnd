@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import Tribute, { TributeModel } from "../models/Tribute";
-import Profile from "models/Profile";
+import Profile from "../models/Profile";
 
 async function createTribute(newTribute: TributeModel, profileId: string) {
     const errors = newTribute.validateSync();

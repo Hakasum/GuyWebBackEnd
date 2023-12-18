@@ -1,5 +1,5 @@
-import Profile from "models/Profile";
-import Writing, { WritingModel } from "models/Writing";
+import Profile from "../models/Profile";
+import Writing, { WritingModel } from "../models/Writing";
 import mongoose from "mongoose";
 
 async function createWriting(newWriting: WritingModel, profileId: String) {

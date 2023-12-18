@@ -4,8 +4,8 @@ import cors from "cors";
 import mongoose from "mongoose";
 import { config } from "./config"
 import MainController from "./Controllers/MainController"
-import ProfileAdminController from "./Controllers/ProfileAdminController"
 import AdminController from "./Controllers/AdminController"
+import ProfileAdminController from "./Controllers/ProfileAdminController"
 
 const app = express();
 
@@ -18,7 +18,7 @@ app.get('/api/ping', (request, response) => {
 })
 
 app.use('/api', MainController);
-app.use('/api/profile-admin', ProfileAdminController);
+app.use('/api/profile-admin', ProfileAdminController)
 app.use('/api/admin', AdminController);
 
 

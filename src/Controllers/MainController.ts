@@ -1,9 +1,6 @@
-import Tribute from "../models/Tribute";
-import Profile from "../models/Profile";
 import ProfileService from "../Services/ProfileService";
 import express from "express";
 import Request from "../models/Request";
-import TributeService from "Services/TributeService";
 
 const router = express.Router();
 
