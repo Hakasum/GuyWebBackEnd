@@ -1,6 +1,7 @@
 import ProfileService from "../Services/ProfileService";
 import express from "express";
 import Request from "../models/Request";
+import Profile from "../models/Profile";
 
 const router = express.Router();
 
@@ -39,12 +40,17 @@ router.post("/new-request/:profileId",async (req, res) => {
 })
 
 router.post("/add-profile", async (req, res) => {
-    try { 
-        const addedProfile = await ProfileService.createProfile();
+    try {
+        const newProfile = new Profile(req.body);
+        const addedProfile = await ProfileService.createProfile(newProfile);
         res.json(addedProfile)
     }
     catch (err) {
-        res.status(500).json("An Error Occurred ")
+        if (err instanceof Error) {
+            res.status(500).json({ error: err.message });
+        } else {
+            res.status(500).json({ error: "An unknown error occurred." });
+        }
     }
 })
 

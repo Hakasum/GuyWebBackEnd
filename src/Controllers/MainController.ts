@@ -32,7 +32,11 @@ router.post("/new-request/:profileId",async (req, res) => {
         const addedRequest = await ProfileService.createRequest(newRequest, req.params.profileId);
         res.json(addedRequest)
     } catch (err) { 
-        res.status(500).json("An Error Occurred ")
+        if (err instanceof Error) {
+            res.status(500).json({ error: err.message });
+        } else {
+            res.status(500).json({ error: "An unknown error occurred." });
+        }
     }
 });
 

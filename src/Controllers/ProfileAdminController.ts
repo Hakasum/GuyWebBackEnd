@@ -41,9 +41,13 @@ router.post("/new-writing/:profileId",async (req, res) => {
 router.post("/approve/:profileId/:requestId", async (req, res) => {
     try {
         const result = await ProfileService.approveRequest(req.params.requestId, req.params.profileId);
-        res.json(result);
+        res.json(result !== null);
     } catch(err) {
-        res.status(500).json("An Error Occurred ")
+        if (err instanceof Error) {
+            res.status(500).json({ error: err.message });
+        } else {
+            res.status(500).json({ error: "An unknown error occurred." });
+        }
     }
 });
 

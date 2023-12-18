@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from "mongoose";
 
 interface RequestI {
   type: "Writing" | "Tribute" | "Gallery";
-  body: string;
+  data: string;
   images: string[];
 }
 
@@ -15,8 +15,8 @@ const RequestSchema = new Schema({
     enum: ["Writing", "Gallery", "Tribute"],
     required: true,
   },
-  body: {
-    type: String,
+  data: {
+    type: Schema.Types.Mixed,
     required: true,
   },
   photos: [

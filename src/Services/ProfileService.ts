@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Profile from "../models/Profile";
+import Profile, { ProfileModel } from "../models/Profile";
 import GalleryService from "./GalleryService";
 import Tribute from "../models/Tribute";
 import Writing from "../models/Writing";
@@ -14,26 +14,28 @@ async function getFullProfile(id: string) {
     return await Profile.findById(id).populate("gallery").populate("writings").populate("tributes").exec();
 }
 
-async function createProfile() {
-    const newProfile = new Profile();
+async function createProfile(newProfile: ProfileModel) {
     newProfile.gallery = new mongoose.Types.ObjectId(await GalleryService.createGallery());
-    console.log("Gallery", newProfile.gallery);
     return newProfile.save();
 }
-async function deleteProfile(_id: string) {
-    if (!mongoose.Types.ObjectId.isValid(_id)) {
+async function deleteProfile(profileId: string) {
+    if (!mongoose.Types.ObjectId.isValid(profileId)) {
         throw new Error('Invalid profileId');
     }
-    const profileToDelete = await Profile.findOne({ _id: _id })
+    const profileToDelete = await Profile.findOne({ _id: profileId })
     const result = await profileToDelete.deleteOne();
     return result !== null;
 }
 
-async function createRequest(requestToAdd:RequestModel, profileId: String) {
+async function createRequest(requestToAdd:RequestModel, profileId: string) {
+    if (!mongoose.Types.ObjectId.isValid(profileId)) {
+        throw new Error('Invalid profileId');
+    }
     const profile = await Profile.findById(profileId);
     const addedRequest = await requestToAdd.save();
     const requestId = new mongoose.Types.ObjectId(addedRequest._id);
     const result = profile.requests.push(requestId);
+    profile.save();
     return result !== null
 }
 
@@ -45,21 +47,22 @@ async function approveRequest(requestIdToApprove: string, profileId: string) {
     const profile = await Profile.findById(profileId);
     switch(requestToAdd.type) {
         case "Tribute":
-            const tributeToAdd = new Tribute(JSON.parse(requestToAdd.body));
+            const tributeToAdd = new Tribute(JSON.parse(requestToAdd.data));
             const tributeAdded = await tributeToAdd.save();
             profile.tributes.push(new mongoose.Types.ObjectId(tributeAdded._id));
             break;
         case "Writing":
-            const writingToAdd = new Writing(JSON.parse(requestToAdd.body));
+            const writingToAdd = new Writing(requestToAdd.data);
             const writingAdded = await writingToAdd.save();
-            profile.tributes.push(new mongoose.Types.ObjectId(writingAdded._id));
+            profile.writings.push(new mongoose.Types.ObjectId(writingAdded._id));
             break;
         case "Gallery":
             break;
     }
-
-    const result = profile.requests.splice(profile.requests.indexOf(new mongoose.Types.ObjectId(requestIdToApprove)),1);
-    return result;
+    profile.requests.splice(profile.requests.indexOf(new mongoose.Types.ObjectId(requestIdToApprove)),1);
+    Request.findByIdAndDelete(requestIdToApprove)
+    const result = profile.save()
+    return result !== null;
 }
 
 export default {
