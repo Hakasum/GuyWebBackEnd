@@ -1,9 +1,6 @@
 // profile.model.ts
 import mongoose, { Schema, Document } from "mongoose";
-import Gallery, { GalleryModel } from "./Gallery";
-import Tribute, { TributeModel } from "./Tribute";
-import Writing from "./Writing";
-import Request, { RequestModel } from "./Request";
+import { TributeModel } from "./Tribute";
 
 interface ProfileI {
   fullName: string;

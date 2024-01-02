@@ -60,8 +60,9 @@ async function approveRequest(requestIdToApprove: string, profileId: string) {
             break;
     }
     profile.requests.splice(profile.requests.indexOf(new mongoose.Types.ObjectId(requestIdToApprove)),1);
-    Request.findByIdAndDelete(requestIdToApprove)
-    const result = profile.save()
+    const requestToRemove = Request.findById(new mongoose.Types.ObjectId(requestIdToApprove));
+    requestToRemove.deleteOne().exec();
+    const result = profile.save();
     return result !== null;
 }
 
